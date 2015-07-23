@@ -21,24 +21,47 @@ public class TextFuture extends Future {
 	 */
 	@Override
 	public void download(InputStream stream) {
+		this.setStatus(STATUS_DOWNLOADING);
+		//
+		try {
+			text = convert(stream);
+		}
+		catch (IOException ex) {
+			Log.e("pluto", "call TextFuture.convert(?) failed", ex);
+			this.setStatus(STATUS_ERROR);
+			return;
+		}
+        this.setStatus(STATUS_COMPLETED);
+	}
+
+	/**
+	 * 输入流转字符串
+	 *
+	 * @param stream 输入流
+	 * @return 字符串
+	 */
+	public static String convert(InputStream stream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder builder = new StringBuilder();
-        try {
-        	String line = null;
+		StringBuilder builder = new StringBuilder();
+		try {
+			String line = null;
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
 			}
 		}
-        catch (Exception ex) {
-	        this.setStatus(STATUS_ERROR);
+		catch (IOException ex) {
+			throw ex;
 		}
-        finally {
-        	try {
-            	reader.close();
+		finally {
+			try {
+				if(null != reader) {
+					reader.close();
+				}
 			}
-			catch (Exception e) { }
-        }
-        text = builder.toString();
-        this.setStatus(STATUS_COMPLETED);
+			catch (Exception e) {
+				Log.e("pluto", "call BufferedReader.close() failed", e);
+			}
+		}
+		return builder.toString();
 	}
 }

@@ -29,6 +29,8 @@ public class FileFuture extends Future {
 	 */
 	@Override
 	public void download(InputStream stream) {
+		this.setStatus(STATUS_DOWNLOADING);
+		//
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		OutputStream output = null;
         try {
@@ -37,18 +39,72 @@ public class FileFuture extends Future {
             int size = 0;
             while((size = stream.read(buffer)) != -1) {
             	output.write(buffer, 0, size);
+				this.progress(size);
             }
 		}
         catch (Exception ex) {
-	        this.setStatus(STATUS_ERROR);
+			Log.e("pluto", "FileFuture.download(?) execute failed", ex);
+			this.setStatus(STATUS_ERROR);
+			return;
 		}
         finally {
-        	try {
-            	reader.close();
-            	output.close();
+			try {
+				if(null != reader) {
+					reader.close();
+				}
 			}
-			catch (Exception e) { }
+			catch (Exception e) {
+				Log.e("pluto", "call BufferedReader.close() failed", e);
+			}
+			try {
+				if(null != output) {
+					output.close();
+				}
+			}
+			catch (Exception e) {
+				Log.e("pluto", "call OutputStream.close() failed", e);
+			}
         }
         this.setStatus(STATUS_COMPLETED);
+	}
+
+	/**
+	 * 存储输入流
+	 *
+	 * @param stream 输入流
+	 * @param file 文件对象
+	 */
+	public static void save(InputStream stream, File file) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		OutputStream output = null;
+		try {
+			output = new FileOutputStream(file);
+			byte buffer[] = new byte[SIZE_DOWNLOAD];
+			int size = 0;
+			while((size = stream.read(buffer)) != -1) {
+				output.write(buffer, 0, size);
+			}
+		}
+		catch (IOException ex) {
+			throw ex;
+		}
+		finally {
+			try {
+				if(null != reader) {
+					reader.close();
+				}
+			}
+			catch (Exception e) {
+				Log.e("pluto", "call BufferedReader.close() failed", e);
+			}
+			try {
+				if(null != output) {
+					output.close();
+				}
+			}
+			catch (Exception e) {
+				Log.e("pluto", "call OutputStream.close() failed", e);
+			}
+		}
 	}
 }

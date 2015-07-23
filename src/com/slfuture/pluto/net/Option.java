@@ -16,8 +16,4 @@ public class Option {
 	 * 超时时长
 	 */
 	public int timeout;
-	/**
-	 * 工作流
-	 */
-	public PipeLine pipeLine = null;
 }
