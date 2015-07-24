@@ -1,8 +1,11 @@
 package com.slfuture.pluto.net.future;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import android.util.Log;
 
 /**
  * 文本回调类

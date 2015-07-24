@@ -1,7 +1,5 @@
 package com.slfuture.pluto.net;
 
-import com.slfuture.carrie.base.async.PipeLine;
-
 /**
  * 选项类
  */
@@ -16,4 +14,19 @@ public class Option {
 	 * 超时时长
 	 */
 	public int timeout;
+	
+	
+	/**
+	 * 构造函数
+	 */
+	public Option() { }	
+	
+	/**
+	 * 构造函数
+	 * 
+	 * @param timeout 超时时长
+	 */
+	public Option(int timeout) {
+		this.timeout = timeout;
+	}
 }

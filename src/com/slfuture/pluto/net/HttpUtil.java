@@ -1,11 +1,11 @@
 package com.slfuture.pluto.net;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -13,10 +13,10 @@ import java.net.URLEncoder;
 
 import android.util.Log;
 
-import com.slfuture.carrie.base.async.core.IOperation;
 import com.slfuture.carrie.base.type.core.ILink;
 import com.slfuture.carrie.base.type.core.ITable;
 import com.slfuture.pluto.net.future.Future;
+import com.slfuture.pluto.net.future.TextFuture;
 
 /**
  * HTTP工具类
@@ -78,11 +78,14 @@ public class HttpUtil {
 			if(null != future) {
 				future.setStatus(Future.STATUS_TIMEOUT);
 			}
-			return return;
+			return null;
 		}
 		if(null == connection) {
 			future.setStatus(Future.STATUS_ERROR);
 			return null;
+		}
+		if(null != future) {
+			future.setTotal(connection.getContentLength());
 		}
 		// 上传
 		if(null != parameters) {
@@ -102,10 +105,25 @@ public class HttpUtil {
 		}
 		// 下载
 		if(null == future) {
-			return TextFuture.convert(connection.getInputStream());
+			try {
+				return TextFuture.convert(connection.getInputStream());
+			}
+			catch(Exception ex) {
+				Log.e("pluto", "call TextFuture.convert(?) failed", ex);
+			}
+			return null;
 		}
 		else {
-			future.download(connection.getInputStream());
+			InputStream stream = null;
+			try {
+				stream = connection.getInputStream();
+			}
+			catch(Exception ex) {
+				Log.e("pluto", "call TextFuture.convert(?) failed", ex);
+				future.setStatus(Future.STATUS_ERROR);
+				return null;
+			}
+			future.download(stream);
 			return null;
 		}
 	}
@@ -118,17 +136,18 @@ public class HttpUtil {
 	 * @return 成功返回连接对象，失败返回null
 	 */
 	private static HttpURLConnection connect(String url, int method, int timeout) throws SocketTimeoutException {
-		HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
-		connection.setDoOutput(true);
-		connection.setUseCaches(false);
-		if (timeout > 0) {
-			connection.setConnectTimeout(option.timeout);
-		}
-		if (METHOD_POST == method) {
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + HTTP_BOUNDARY_STRING);
-		}
+		HttpURLConnection connection = null;
 		try {
+			connection = (HttpURLConnection) (new URL(url)).openConnection();
+			connection.setDoOutput(true);
+			connection.setUseCaches(false);
+			if (timeout > 0) {
+				connection.setConnectTimeout(timeout);
+			}
+			if (METHOD_POST == method) {
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + HTTP_BOUNDARY_STRING);
+			}
 			connection.connect();
 		}
 		catch (SocketTimeoutException e) {
