@@ -80,15 +80,8 @@ public class HttpUtil {
 			}
 			return null;
 		}
-		if(null == connection) {
-			future.setStatus(Future.STATUS_ERROR);
-			return null;
-		}
-		if(null != future) {
-			future.setTotal(connection.getContentLength());
-		}
 		// 上传
-		if(null != parameters) {
+		if(null != parameters && parameters.size() > 0) {
 			if(null != future) {
 				future.setStatus(Future.STATUS_UPLOADING);
 			}
@@ -102,6 +95,20 @@ public class HttpUtil {
 				}
 				return null;
 			}
+		}
+		try {
+			if(200 != connection.getResponseCode()) {
+				connection = null;
+			}
+		} catch (IOException e) {
+			Log.e("pluto", "call connection.getResponseCode() failed", e);
+		}
+		if(null == connection) {
+			future.setStatus(Future.STATUS_ERROR);
+			return null;
+		}
+		if(null != future) {
+			future.setTotal(connection.getContentLength());
 		}
 		// 下载
 		if(null == future) {
@@ -139,16 +146,17 @@ public class HttpUtil {
 		HttpURLConnection connection = null;
 		try {
 			connection = (HttpURLConnection) (new URL(url)).openConnection();
-			connection.setDoOutput(true);
 			connection.setUseCaches(false);
 			if (timeout > 0) {
 				connection.setConnectTimeout(timeout);
 			}
+			connection.setDoInput(true);
 			if (METHOD_POST == method) {
+				connection.setDoOutput(true);
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + HTTP_BOUNDARY_STRING);
-			}
-			connection.connect();
+				connection.connect();
+			} 
 		}
 		catch (SocketTimeoutException e) {
 			throw e;
@@ -171,6 +179,9 @@ public class HttpUtil {
 		try {
 			outStream = new DataOutputStream(stream);
 			for (ILink<String, Object> link : parameters) {
+				if(null == link.destination()) {
+					continue;
+				}
 				if(link.destination() instanceof File) {
 					continue;
 				}
@@ -180,6 +191,9 @@ public class HttpUtil {
 				outStream.writeBytes("\r\n");
 			}
 			for (ILink<String, Object> link : parameters) {
+				if(null == link.destination()) {
+					continue;
+				}
 				if(!(link.destination() instanceof File)) {
 					continue;
 				}

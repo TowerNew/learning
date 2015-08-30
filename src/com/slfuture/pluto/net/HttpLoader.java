@@ -35,7 +35,12 @@ public class HttpLoader {
 		
 		@Override
 		public Void onExecute() {
-			HttpUtil.send(url, parameters, option, future);
+			try {
+				HttpUtil.send(url, parameters, option, future);
+			}
+			catch(Exception ex) {
+				Log.e("pluto", "call HttpUtil.send(" + url + ", ?, ?, ?) failed", ex);
+			}
 			return null;
 		}
 	}

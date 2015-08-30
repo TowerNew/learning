@@ -34,6 +34,9 @@ public class Configuration {
 	        }
 	        String head = null;
 	        String tail = null;
+	        if(path.startsWith(CONFIG_PATH_SEPARATOR)) {
+	        	return visit(path.substring(1));
+	        }
 	        // 取出本次分析的段
 	        int i = path.indexOf(CONFIG_PATH_SEPARATOR);
 	        if(-1 == i) {
@@ -70,6 +73,9 @@ public class Configuration {
 	        }
 	        String head = null;
 	        String tail = null;
+	        if(path.startsWith(CONFIG_PATH_SEPARATOR)) {
+	        	return visits(path.substring(1));
+	        }
 	        // 取出本次分析的段
 	        int i = path.indexOf(CONFIG_PATH_SEPARATOR);
 	        if(-1 == i) {
@@ -102,7 +108,7 @@ public class Configuration {
 	/**
 	 * 根配置节点
 	 */
-	private static ConfigurationConfig root = new ConfigurationConfig();
+	private static ConfigurationConfig root = null;
 
 
 	/**
@@ -112,6 +118,7 @@ public class Configuration {
 	 * @return 执行结果
 	 */
 	public static boolean initialize(Application application) {
+		root = new ConfigurationConfig();
 		Configuration.application = application;
 		return true;
 	}
