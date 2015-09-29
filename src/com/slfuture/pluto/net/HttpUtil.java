@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import android.util.Log;
 
@@ -187,7 +186,7 @@ public class HttpUtil {
 				}
 				outStream.writeBytes("--" + HTTP_BOUNDARY_STRING + "\r\n");
 				outStream.writeBytes("Content-Disposition: form-data; name=\"" + link.origin() + "\"\r\n\r\n");
-				outStream.writeBytes(URLEncoder.encode(link.destination().toString(), "UTF-8"));
+				outStream.write(link.destination().toString().getBytes("UTF-8"));
 				outStream.writeBytes("\r\n");
 			}
 			for (ILink<String, Object> link : parameters) {
@@ -199,7 +198,7 @@ public class HttpUtil {
 				}
 				File file = (File) link.destination();
 				outStream.writeBytes("--" + HTTP_BOUNDARY_STRING + "\r\n");
-				outStream.writeBytes("Content-Disposition: form-data; name=\"" + link.origin() + "\"; filename=\"" + URLEncoder.encode(file.getName(), "UTF-8") + "\"\r\n");
+				outStream.writeBytes("Content-Disposition: form-data; name=\"" + link.origin() + "\"; filename=\"" + file.getName() + "\"\r\n");
 				outStream.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
 				//
 				FileInputStream fileStream = new FileInputStream(file);
