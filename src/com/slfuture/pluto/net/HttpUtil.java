@@ -99,11 +99,14 @@ public class HttpUtil {
 			if(200 != connection.getResponseCode()) {
 				connection = null;
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Log.e("pluto", "call connection.getResponseCode() failed", e);
 		}
 		if(null == connection) {
-			future.setStatus(Future.STATUS_ERROR);
+			if(null != future) {
+				future.setStatus(Future.STATUS_ERROR);
+			}
 			return null;
 		}
 		if(null != future) {
