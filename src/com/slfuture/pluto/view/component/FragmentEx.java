@@ -32,7 +32,7 @@ public class FragmentEx extends Fragment {
 					continue;
 				}
 				try {
-					field.set(this, this.getActivity().findViewById(controlView.id()));
+					field.set(this, result.findViewById(controlView.id()));
 				}
 				catch (IllegalAccessException e) {
 					Log.e("pluto", "FragmentEx.onCreate() failed", e);
