@@ -1,10 +1,10 @@
 package com.slfuture.pluto.sensor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.slfuture.carrie.base.async.Operator;
 import com.slfuture.carrie.base.async.core.IOperation;
-import com.slfuture.carrie.base.type.safe.Set;
 import com.slfuture.pluto.sensor.core.ILocationListener;
 
 import android.content.Context;
@@ -61,8 +61,8 @@ public class LocationSensor {
 				currentLocation.latitude = location.getLatitude();
 				currentLocation.longitude = location.getLongitude();
 				//
-				Set<ILocationListener> template = listeners;
-				listeners = new Set<ILocationListener>();
+				LinkedList<ILocationListener> template = listeners;
+				listeners = new LinkedList<ILocationListener>();
 				for(ILocationListener listener : template) {
 					listener.onListen(currentLocation);
 				}
@@ -89,7 +89,7 @@ public class LocationSensor {
 	/**
 	 * 当前监听器集合
 	 */
-	private static Set<ILocationListener> listeners = new Set<ILocationListener>();
+	private static LinkedList<ILocationListener> listeners = new LinkedList<ILocationListener>();
 	/**
 	 * 当前有效监听器
 	 */
@@ -138,7 +138,8 @@ public class LocationSensor {
 		String provider = manager.getBestProvider(criteria, true);
 		List<String> accessibleProviders = manager.getProviders(true);
 		if(provider != null || accessibleProviders.size() > 0) {
-		    manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0 ,listener);
+		    // manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0 ,listener);
+		    manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0 ,listener);
 		}
 		else {
 			listener = null;
@@ -177,7 +178,15 @@ public class LocationSensor {
 				catch (InterruptedException e) {
 					Log.e("Pluto", "Thread.sleep(" + timeout + ") failed in fetchCurrentLocation", e);
 				}
-				if(!listeners.contains(listener)) {
+				boolean sentry = false;
+				for(ILocationListener item : listeners) {
+					if(item == listener) {
+						sentry = true;
+						listeners.remove(listener);
+						break;
+					}
+				}
+				if(!sentry) {
 					return null;
 				}
 				listener.onListen(fetchLastKnownLocation());
