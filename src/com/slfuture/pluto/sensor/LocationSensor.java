@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.slfuture.carrie.base.async.Operator;
 import com.slfuture.carrie.base.async.core.IOperation;
+import com.slfuture.pluto.etc.Control;
 import com.slfuture.pluto.sensor.core.ILocationListener;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 /**
@@ -86,6 +88,10 @@ public class LocationSensor {
 	 * 位置管理器
 	 */
 	private static LocationManager manager = null;
+	/**
+	 * 回调句柄
+	 */
+	private static Handler handler = null;
 	/**
 	 * 当前监听器集合
 	 */
@@ -169,6 +175,7 @@ public class LocationSensor {
 	 * @param timeout 最长等待时间
 	 */
 	public static void fetchCurrentLocation(ILocationListener listener, long timeout) {
+		handler = Control.fetchHandler();
 		new Operator<Void>(new Operation<Void>(listener, timeout) {
 			@Override
 			public Void onExecute() {
@@ -189,7 +196,12 @@ public class LocationSensor {
 				if(!sentry) {
 					return null;
 				}
-				listener.onListen(fetchLastKnownLocation());
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						listener.onListen(fetchLastKnownLocation());
+					}
+				});
 				return null;
 			}
 		});

@@ -2,7 +2,9 @@ package com.slfuture.pluto.js;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -89,7 +91,14 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 			if (url.startsWith(BridgeUtil.YY_RETURN_DATA)) { // 如果是返回数据
 				handlerReturnData(url);
 				return true;
-			} else if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) { //
+			} 
+			else if(url.startsWith("mailto:") || url.startsWith("geo:") ||url.startsWith("tel:")) {
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				BridgeWebView.this.getContext().startActivity(intent);
+                BridgeWebView.this.pauseTimers();
+                return false;
+            }
+			else if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) { //
 				flushMessageQueue();
 				return true;
 			} else {
