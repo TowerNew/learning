@@ -255,6 +255,10 @@ public class Host {
 	public static boolean initialize() {
 		domain = Configuration.root().visit("/protocols").get("domain");
 		storage = SDCard.root() + Configuration.root().visit("/protocols").get("storage");
+		File directory = new File(storage);
+		if(!directory.exists()) {
+			directory.mkdirs();
+		}
 		if("true".equalsIgnoreCase(Configuration.root().visit("/protocols").get("mock"))) {
 			isMock = true;
 		}
@@ -338,7 +342,11 @@ public class Host {
 	 * @return URL
 	 */
 	public static String fetchURL(String protocol, Object... parameters) {
-		return protocols.get(protocol).buildURL(parameters);
+		Protocol p = protocols.get(protocol);
+		if(null == p) {
+			return null;
+		}
+		return p.buildURL(parameters);
 	}
 
 	/**
