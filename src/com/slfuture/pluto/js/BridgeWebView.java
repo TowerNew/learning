@@ -96,9 +96,10 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				BridgeWebView.this.getContext().startActivity(intent);
                 BridgeWebView.this.pauseTimers();
-                return false;
+                BridgeWebView.this.resumeTimers();
+                return true;
             }
-			else if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) { //
+			else if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) {
 				flushMessageQueue();
 				return true;
 			} else {

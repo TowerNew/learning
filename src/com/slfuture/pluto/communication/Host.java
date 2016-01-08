@@ -333,7 +333,7 @@ public class Host {
 		}
 		return material;
 	}
-	
+
 	/**
 	 * 获取协议URL
 	 * 
