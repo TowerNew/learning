@@ -8,6 +8,4 @@ public class System {
 	 * 隐藏构造函数
 	 */
 	protected System() { }
-	
-	public 
 }

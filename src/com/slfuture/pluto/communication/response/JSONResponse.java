@@ -45,10 +45,12 @@ public abstract class JSONResponse extends CommonResponse<String> {
 		if(IResponse.CODE_SUCCESS != code()) {
 			Toast.makeText(context, "网络错误", Toast.LENGTH_LONG).show();
 			onFinished((JSONVisitor) null);
+			return;
 		}
 		else if(null == content) {
 			Toast.makeText(context, "数据错误", Toast.LENGTH_LONG).show();
 			onFinished((JSONVisitor) null);
+			return;
 		}
 		JSONVisitor visitor = new JSONVisitor(JSONObject.convert(content));
 		if(null != visitor.getString("msg")) {
