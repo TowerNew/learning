@@ -183,7 +183,7 @@ public class LocationSensor {
 					Thread.sleep(timeout);
 				}
 				catch (InterruptedException e) {
-					Log.e("Pluto", "Thread.sleep(" + timeout + ") failed in fetchCurrentLocation", e);
+					Log.e("pluto", "Thread.sleep(" + timeout + ") failed in fetchCurrentLocation", e);
 				}
 				boolean sentry = false;
 				for(ILocationListener item : listeners) {

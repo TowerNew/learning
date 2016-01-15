@@ -187,7 +187,7 @@ public class Host {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void handleMessage(Message msg) {
-			Log.i("Pluto", "HostHandler HOST MESSAGE");
+			Log.i("pluto", "HostHandler HOST MESSAGE");
 			HostBundle bundle = hostBundles.get(msg.what);
 			hostBundles.delete(msg.what);
 			if(null == bundle.content) {

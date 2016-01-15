@@ -1,5 +1,10 @@
 package com.slfuture.pluto.etc;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.util.Log;
+
 /**
  * 版本号
  */
@@ -92,5 +97,23 @@ public class Version implements Comparable<Version> {
 	@Override
 	public String toString() {
 		return major + "." + minor + "." + revision;
+	}
+	
+	/**
+	 * 获取系统版本号
+	 * 
+	 * @return 获取系统版本号
+	 */
+	public static Version fetchVersion(Context context) {
+		try {
+			PackageManager manager = context.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			String version = info.versionName;
+			return build(version);
+		}
+		catch (Exception e) {
+			Log.e("pluto", "fetchVersion(?) failed", e);
+			return null;
+		}
 	}
 }
