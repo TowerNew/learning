@@ -282,6 +282,7 @@ public class Host {
 				protocols.put(conf.get("name"), Protocol.build(urlTemplate, null));
 			}
 		}
+		protocols.put("", Protocol.build("[1]", null));
 		return true;
 	}
 

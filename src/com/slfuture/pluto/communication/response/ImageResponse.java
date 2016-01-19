@@ -15,6 +15,14 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 	 */
 	public Object tag = null;
 
+	/**
+	 * 构造函数
+	 * 
+	 * @param url 图片码
+	 */
+	public ImageResponse(String url) {
+		this.url = url;
+	}
 
 	/**
 	 * 构造函数

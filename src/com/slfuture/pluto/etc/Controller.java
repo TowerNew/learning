@@ -8,7 +8,7 @@ import android.os.Handler;
 /**
  * 工具类
  */
-public class Control {
+public class Controller {
 	/**
 	 * 回调类
 	 */

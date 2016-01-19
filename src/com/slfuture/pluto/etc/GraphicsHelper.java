@@ -2,6 +2,7 @@ package com.slfuture.pluto.etc;
 
 import java.io.File;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -14,9 +15,34 @@ public class GraphicsHelper {
 	 * 隐藏构造函数
 	 */
 	private GraphicsHelper() { }
-
+	
 	/**
 	 * 解码图像文件
+	 * 
+	 * @param file 文件
+	 */
+	public static Bitmap decodeFile(File file) {
+		if(file.exists()) {
+			return BitmapFactory.decodeFile(file.getAbsolutePath());
+		}
+		return null;
+	}
+
+	/**
+	 * 根据DIP解码图像文件
+	 * 
+	 * @param context 上下文
+	 * @param file 文件
+	 * @param width 目标宽度
+	 * @param height 目标高度
+	 */
+	public static Bitmap decodeFile(Context context, File file, int width, int height) {
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return decodeFile(file, (int)(width * scale + 0.5f), (int)(height * scale + 0.5f));
+	}
+
+	/**
+	 * 根据像素解码图像文件
 	 * 
 	 * @param file 文件
 	 * @param width 目标宽度

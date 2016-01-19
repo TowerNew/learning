@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.slfuture.carrie.base.async.Operator;
 import com.slfuture.carrie.base.async.core.IOperation;
-import com.slfuture.pluto.etc.Control;
+import com.slfuture.pluto.etc.Controller;
 import com.slfuture.pluto.sensor.core.ILocationListener;
 
 import android.content.Context;
@@ -175,7 +175,7 @@ public class LocationSensor {
 	 * @param timeout 最长等待时间
 	 */
 	public static void fetchCurrentLocation(ILocationListener listener, long timeout) {
-		handler = Control.fetchHandler();
+		handler = Controller.fetchHandler();
 		new Operator<Void>(new Operation<Void>(listener, timeout) {
 			@Override
 			public Void onExecute() {
