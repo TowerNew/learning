@@ -44,6 +44,17 @@ public class Controller {
 		Handler handler = fetchHandler();
 		handler.postDelayed(runnable, delay);
 	}
+	
+	/**
+	 * 执行延时命令
+	 * 
+	 * @param runable 可执行代码
+	 * @param delay 延时毫秒数
+	 */
+	public static void doDelay(ParameterRunnable runnable, long delay) {
+		Handler handler = fetchHandler();
+		handler.postDelayed(runnable, delay);
+	}
 
 	/**
 	 * 执行协同命令
