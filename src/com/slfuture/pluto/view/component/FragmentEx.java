@@ -24,7 +24,7 @@ public class FragmentEx extends Fragment {
 		}
 		else {
 			// Activity
-			View result = inflater.inflate(activityView.id(), container, true);
+			View result = inflater.inflate(activityView.id(), container, attachToRoot());
 			// Control
 			for(Field field : this.getClass().getFields()) {
 				com.slfuture.pluto.view.annotation.ResourceView controlView = field.getAnnotation(com.slfuture.pluto.view.annotation.ResourceView.class);
@@ -43,5 +43,14 @@ public class FragmentEx extends Fragment {
 			}
 			return result;
 		}
+	}
+
+	/**
+	 * 是否附着到根视图
+	 * 
+	 * @return 是否附着到根视图
+	 */
+	protected boolean attachToRoot() {
+		return true;
 	}
 }
