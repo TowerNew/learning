@@ -94,6 +94,17 @@ public class GraphicsHelper {
 	}
 
 	/**
+	 * 解析资源
+	 * 
+	 * @param context 上下文
+	 * @param resourceId 资源ID
+	 * @return 位图对象
+	 */
+	public static Bitmap decodeResource(Context context, int resourceId) {
+		return BitmapFactory.decodeResource(context.getResources(), resourceId);
+	}
+
+	/**
 	 * 解码图像文件
 	 * 
 	 * @param file 文件
