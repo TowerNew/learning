@@ -18,7 +18,14 @@ public class FragmentEx extends Fragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		com.slfuture.pluto.view.annotation.ResourceView activityView = this.getClass().getAnnotation(com.slfuture.pluto.view.annotation.ResourceView.class);
+		Class<?> clazz = this.getClass();
+		while(clazz.getName().contains("$")) {
+			clazz = clazz.getSuperclass();
+			if(null == clazz) {
+				return super.onCreateView(inflater, container, savedInstanceState);
+			}
+		}
+		com.slfuture.pluto.view.annotation.ResourceView activityView = clazz.getAnnotation(com.slfuture.pluto.view.annotation.ResourceView.class);
 		if(null == activityView) {
 			return super.onCreateView(inflater, container, savedInstanceState);
 		}
@@ -26,7 +33,7 @@ public class FragmentEx extends Fragment {
 			// Activity
 			View result = inflater.inflate(activityView.id(), container, attachToRoot());
 			// Control
-			for(Field field : this.getClass().getFields()) {
+			for(Field field : clazz.getFields()) {
 				com.slfuture.pluto.view.annotation.ResourceView controlView = field.getAnnotation(com.slfuture.pluto.view.annotation.ResourceView.class);
 				if(null == controlView) {
 					continue;
