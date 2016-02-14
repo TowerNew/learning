@@ -131,6 +131,7 @@ public class SoundRecorder {
         	return null;
         }
         recorder.stop();
+        recorder.reset();
         recorder.release();
         recorder = null;
         if(currentFile == null || !currentFile.exists() || !currentFile.isFile()){

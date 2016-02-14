@@ -1,5 +1,9 @@
 package com.slfuture.pluto.storage;
 
+import java.io.File;
+
+import com.slfuture.carrie.base.text.Text;
+
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -24,6 +28,24 @@ public class Storage {
 	 */
 	public static String externalDirectory() {
 		return Environment.getExternalStorageDirectory().getPath() + "/";
+	}
+
+	/**
+	 * 获取存储卡相机相册根路径
+	 * 
+	 * @return 存储卡相机相册根路径
+	 */
+	public static String cameraDirectory() {
+		String result = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+		if(Text.isBlank(result)) {
+			return null;
+		}
+		if((new File(result + "/Camera/")).exists()) {
+			return result + "/Camera/";
+		}
+		else {
+			return result + "/";
+		}
 	}
 
 	/**

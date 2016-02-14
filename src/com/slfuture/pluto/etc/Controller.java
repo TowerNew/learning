@@ -44,7 +44,7 @@ public class Controller {
 		Handler handler = fetchHandler();
 		handler.postDelayed(runnable, delay);
 	}
-	
+
 	/**
 	 * 执行延时命令
 	 * 
@@ -78,6 +78,28 @@ public class Controller {
 	@SuppressWarnings("unchecked")
 	public static <T>void doMerge(int commandId, T result) {
 		CallBack value = callbacks.delete(commandId);
+		if(null == value) {
+			return;
+		}
+		final T fResult = result;
+		final IEventable<T> fEventable = (IEventable<T>) value.eventable;
+		value.handler.post(new Runnable() {
+			@Override
+			public void run() {
+				fEventable.on((T)fResult);
+			}
+		});
+	}
+	
+	/**
+	 * 执行协同命令
+	 * 
+	 * @param commandId 命令ID
+	 * @param callback 执行结果
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T>void doFork(int commandId, T result) {
+		CallBack value = callbacks.get(commandId);
 		if(null == value) {
 			return;
 		}

@@ -2,6 +2,8 @@ package com.slfuture.pluto.communication.response;
 
 import java.io.File;
 
+import com.slfuture.carrie.base.etc.Serial;
+
 /**
  * 文件反馈
  */
@@ -49,13 +51,34 @@ public abstract class FileResponse extends CommonResponse<File> {
 	 * 
 	 * @return 文件名称
 	 */
+	/**
+	 * 获取文件名称
+	 * 
+	 * @return 文件名称
+	 */
 	public String fileName() {
-		if(null == url) {
-			return null;
+		if(null != path) {
+			int i = path.lastIndexOf(File.separator);
+			if(-1 == i) {
+				return path;
+			}
+			return path.substring(i + 1);
 		}
-		return url.substring(1 + url.lastIndexOf("/"));
+		if(null != url) {
+			String md5 = Serial.getMD5String(url).toLowerCase();
+			int i = url.lastIndexOf(".");
+			if(-1 == i) {
+				return md5;
+			}
+			String suffix = url.substring(i).toLowerCase();
+			if(suffix.length() > 5) {
+				return md5;
+			}
+			return md5 + suffix;
+		}
+		return null;
 	}
-	
+
 	/**
 	 * 获取文件对象
 	 * 

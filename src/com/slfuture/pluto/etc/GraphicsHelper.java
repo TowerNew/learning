@@ -1,6 +1,8 @@
 package com.slfuture.pluto.etc;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -160,6 +162,47 @@ public class GraphicsHelper {
 			Log.e("pluto", "decodeFile failed", e);
 		}
 		return null;
+	}
+
+	/**
+	 * 保存位图
+	 * 
+	 * @param bitmap 位图对象
+	 * @param target 保存位置
+	 * @param width 宽度
+	 * @param height 高度
+	 */
+	public static void saveFile(Bitmap bitmap, File target, int width, int height) throws IOException {
+        FileOutputStream stream = null;  
+        try {  
+        	stream = new FileOutputStream(target);
+        	if(width > 0 && height > 0) {
+        		int quality = width * 100 / bitmap.getWidth();
+        		if(quality < height * 100 / bitmap.getHeight()) {
+        			quality = height * 100 / bitmap.getHeight();
+        		}
+        		if(quality > 100) {
+        			quality = 100;
+        		}
+        		else if(quality <= 0) {
+        			quality = 1;
+        		}
+        		bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        	}
+        	else {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        	}
+            stream.flush();
+        }
+        catch (IOException e) {
+                throw e;
+        }
+        finally {
+        	if(null != stream) {
+        		stream.close();
+        	}
+        	stream = null;
+        }
 	}
 
 	public static int computeSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
