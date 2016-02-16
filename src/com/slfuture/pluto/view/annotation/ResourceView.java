@@ -12,7 +12,15 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface ResourceView {
     /**
-     * 属性名称
+     * 资源ID
      */
     int id() default 0;
+    /**
+     * 资源类
+     */
+    Class<?> clazz()  default Object.class;
+    /**
+     * 资源ID属性
+     */
+    String field() default "";
 }

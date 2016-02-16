@@ -6,7 +6,6 @@ import com.slfuture.pluto.view.annotation.ResourceView;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 /**
  * 界面拓展
@@ -18,25 +17,47 @@ public class FragmentActivityEx extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Activity
 		ResourceView activityView = this.getClass().getAnnotation(ResourceView.class);
 		if(null != activityView) {
-			this.setContentView(activityView.id());
+			if(0 != activityView.id()) {
+				this.setContentView(activityView.id());
+			}
+			else if(!"".equals(activityView.field())) {
+				try {
+					this.setContentView((Integer) activityView.clazz().getField(activityView.field()).get(null));
+				}
+				catch (NoSuchFieldException e) {
+					throw new RuntimeException("set " + activityView.clazz() + "." + activityView.field() + " failed", e);
+				}
+				catch (IllegalAccessException e) {
+					throw new RuntimeException("set " + activityView.clazz() + "." + activityView.field() + " failed", e);
+				}
+				catch (IllegalArgumentException e) {
+					throw new RuntimeException("set " + activityView.clazz() + "." + activityView.field() + " failed", e);
+				}
+			}
 		}
-		// Control
 		for(Field field : this.getClass().getFields()) {
 			ResourceView controlView = field.getAnnotation(ResourceView.class);
 			if(null == controlView) {
 				continue;
 			}
 			try {
-				field.set(this, this.findViewById(controlView.id()));
+				if(0 != controlView.id()) {
+					field.set(this, this.findViewById(controlView.id()));
+				}
+				else if(!"".equals(controlView.field())) {
+					field.set(this, this.findViewById((Integer) controlView.clazz().getField(controlView.field()).get(null)));
+				}
 			}
 			catch (IllegalAccessException e) {
-				Log.e("pluto", "FragmentActivityEx.onCreate() failed", e);
+				throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);
 			}
 			catch (IllegalArgumentException e) {
-				Log.e("pluto", "FragmentActivityEx.onCreate() failed", e);
+				throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);
+			}
+			catch (NoSuchFieldException e) {
+				throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);
 			}
 		}
 	}

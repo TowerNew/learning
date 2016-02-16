@@ -2,9 +2,10 @@ package com.slfuture.pluto.view.component;
 
 import java.lang.reflect.Field;
 
+import com.slfuture.pluto.view.annotation.ResourceView;
+
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,22 +31,54 @@ public class FragmentEx extends Fragment {
 			return super.onCreateView(inflater, container, savedInstanceState);
 		}
 		else {
-			// Activity
-			View result = inflater.inflate(activityView.id(), container, attachToRoot());
-			// Control
+			View result = null;
+			int id = 0;
+			if(0 != activityView.id()) {
+				id = activityView.id();
+			}
+			else if(!"".equals(activityView.field())) {
+				try {
+					id = (Integer) activityView.clazz().getField(activityView.field()).get(null);
+				}
+				catch (IllegalAccessException e) {
+					throw new RuntimeException("set " + activityView.clazz() + "." + activityView.field() + " failed", e);
+				}
+				catch (IllegalArgumentException e) {
+					throw new RuntimeException("set " + activityView.clazz() + "." + activityView.field() + " failed", e);
+				}
+				catch (NoSuchFieldException e) {
+					throw new RuntimeException("set " + activityView.clazz() + "." + activityView.field() + " failed", e);
+				}
+			}
+			else {
+				return super.onCreateView(inflater, container, savedInstanceState);
+			}
+			result = inflater.inflate(id, container, attachToRoot());
 			for(Field field : clazz.getFields()) {
-				com.slfuture.pluto.view.annotation.ResourceView controlView = field.getAnnotation(com.slfuture.pluto.view.annotation.ResourceView.class);
+				ResourceView controlView = field.getAnnotation(ResourceView.class);
 				if(null == controlView) {
 					continue;
 				}
 				try {
-					field.set(this, result.findViewById(controlView.id()));
+					if(0 != controlView.id()) {
+						id = controlView.id();
+					}
+					else if(!"".equals(controlView.field())) {
+						id = (Integer) controlView.clazz().getField(controlView.field()).get(null);
+					}
+					else {
+						continue;
+					}
+					field.set(this, id);
 				}
 				catch (IllegalAccessException e) {
-					Log.e("pluto", "FragmentEx.onCreate() failed", e);
+					throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);
 				}
 				catch (IllegalArgumentException e) {
-					Log.e("pluto", "FragmentEx.onCreate() failed", e);
+					throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);
+				}
+				catch (NoSuchFieldException e) {
+					throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);
 				}
 			}
 			return result;

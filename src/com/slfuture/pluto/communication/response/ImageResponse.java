@@ -3,6 +3,7 @@ package com.slfuture.pluto.communication.response;
 import java.io.File;
 
 import com.slfuture.carrie.base.etc.Serial;
+import com.slfuture.pluto.communication.Host;
 
 import android.graphics.Bitmap;
 
@@ -42,7 +43,7 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 		this.url = url;
 		this.tag = tag;
 	}
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -51,7 +52,7 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 	public ImageResponse(File file) {
 		this.file = file;
 	}
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -62,7 +63,7 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 		this.file = file;
 		this.tag = tag;
 	}
-	
+
 	/**
 	 * 获取文件名称
 	 * 
@@ -73,16 +74,7 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 			return file.getName();
 		}
 		if(null != url) {
-			String md5 = Serial.getMD5String(url).toLowerCase();
-			int i = url.lastIndexOf(".");
-			if(-1 == i) {
-				return md5;
-			}
-			String suffix = url.substring(i).toLowerCase();
-			if(suffix.length() > 5) {
-				return md5;
-			}
-			return md5 + suffix;
+			return Host.parseFileNameWithURL(url);
 		}
 		return null;
 	}

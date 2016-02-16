@@ -421,4 +421,23 @@ public class Host {
 		String path = filePath + "." + Serial.makeLoopInteger();
 		protocols.get(protocol).invoke(material(), new HostFileFuture(imageResponse, hostHandler, new File(path), Bitmap.class), parameters);
 	}
+
+	/**
+	 * 从URL中提取文件名
+	 * 
+	 * @param url
+	 * @return 文件名
+	 */
+	public static String parseFileNameWithURL(String url) {
+		String md5 = Serial.getMD5String(url).toLowerCase();
+		int i = url.lastIndexOf(".");
+		if(-1 == i) {
+			return md5;
+		}
+		String suffix = url.substring(i).toLowerCase();
+		if(suffix.length() > 5) {
+			return md5;
+		}
+		return md5 + suffix;
+	}
 }
