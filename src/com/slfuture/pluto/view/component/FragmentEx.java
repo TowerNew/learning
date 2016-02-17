@@ -69,7 +69,7 @@ public class FragmentEx extends Fragment {
 					else {
 						continue;
 					}
-					field.set(this, id);
+					field.set(this, result.findViewById(id));
 				}
 				catch (IllegalAccessException e) {
 					throw new RuntimeException("set " + controlView.clazz() + "." + controlView.field() + " failed", e);

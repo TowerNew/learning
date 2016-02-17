@@ -2,7 +2,6 @@ package com.slfuture.pluto.communication.response;
 
 import java.io.File;
 
-import com.slfuture.carrie.base.etc.Serial;
 import com.slfuture.pluto.communication.Host;
 
 import android.graphics.Bitmap;
