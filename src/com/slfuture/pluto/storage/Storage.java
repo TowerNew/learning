@@ -1,16 +1,24 @@
 package com.slfuture.pluto.storage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import com.slfuture.carrie.base.etc.Serial;
 import com.slfuture.carrie.base.text.Text;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 
 /**
  * 存储器
@@ -74,6 +82,41 @@ public class Storage {
 		}
 	}
 
+	/**
+	 * 保存摄像头图片
+	 * 
+	 * @param data 摄像头数据
+	 * @param path 保存文件路径
+	 * @return 保存的数据
+	 */
+	public static File saveCamera(Intent data) {
+		Bundle bundle = data.getExtras();
+		Bitmap bitmap = (Bitmap) bundle.get("data");
+		String path = cameraDirectory() + Serial.makeSerialString() + ".jpg";
+		FileOutputStream stream = null;
+		try {
+			stream = new FileOutputStream(path, false);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+			stream.flush();
+			return new File(path);
+		}
+		catch (FileNotFoundException e) {
+			Log.e("pluto", "call saveCamera() failed", e);
+		}
+		catch (IOException e) {
+			Log.e("pluto", "call saveCamera() failed", e);
+		}
+		finally {
+			try {
+				if(null != stream) {
+					stream.close();
+				}
+				stream = null;
+			}
+			catch (IOException e) { }
+		}
+		return null;
+	}
 
 	private static String getImageAbsolutePath(Context context, Uri imageUri) {  
 	    if (context == null || imageUri == null)  
