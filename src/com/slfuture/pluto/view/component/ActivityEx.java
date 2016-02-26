@@ -86,7 +86,7 @@ public class ActivityEx extends Activity {
 				public void onReceive(Context context, Intent intent) {
 					try {
 						com.slfuture.carrie.base.model.Method m = com.slfuture.carrie.base.model.Method.build(intent.getStringExtra("method"));
-						Method method = this.getClass().getMethod(m.name, m.parameters);
+						Method method = ActivityEx.this.getClass().getMethod(m.name, m.parameters);
 						Object[] parameters = new Object[m.parameters.length];
 						for(int i = 0; i < m.parameters.length; i++) {
 							if(!intent.hasExtra("parameter" + i)) {
@@ -115,7 +115,7 @@ public class ActivityEx extends Activity {
 								throw new RuntimeException("unsupport parameter type:" + m.parameters[i]);
 							}
 						}
-						method.invoke(this, parameters);
+						method.invoke(ActivityEx.this, parameters);
 					}
 					catch(Exception ex) {
 						Log.e("pluto", "Broadcast onReceive() failed", ex);

@@ -13,7 +13,7 @@ import android.util.Log;
  */
 public class Reminder {
 	/**
-	 * 
+	 * 隐藏构造函数
 	 */
 	private Reminder() { }
 

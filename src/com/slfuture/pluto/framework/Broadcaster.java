@@ -21,7 +21,7 @@ public class Broadcaster {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T broadcast(final Context context, final Class<T> clazz) {
-		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getClass().getInterfaces(), 
+		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] {clazz}, 
 	        new InvocationHandler() {
 				@Override
 				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
