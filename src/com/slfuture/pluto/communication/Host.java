@@ -1,6 +1,7 @@
 package com.slfuture.pluto.communication;
 
 import java.io.File;
+import java.util.HashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.slfuture.carrie.base.etc.Serial;
+import com.slfuture.carrie.base.model.core.ITargetEventable;
 import com.slfuture.carrie.base.text.Text;
 import com.slfuture.carrie.base.type.safe.Table;
 import com.slfuture.pluto.communication.response.CommonResponse;
@@ -420,6 +422,34 @@ public class Host {
 		}
 		String path = filePath + "." + Serial.makeLoopInteger();
 		protocols.get(protocol).invoke(material(), new HostFileFuture(imageResponse, hostHandler, new File(path), Bitmap.class), parameters);
+	}
+
+	/**
+	 * 执行图片下载命令
+	 * 
+	 * @param protocol 协议名称
+	 * @param target 回调参数目标
+	 * @param event 回调
+	 * @param parameters 参数列表
+	 */
+	public static <T>void doImage(String protocol, T target, ITargetEventable<T, Bitmap> event, Object... parameters) {
+		String url = protocols.get(protocol).buildURL(parameters);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("target", target);
+		map.put("event", event);
+		Host.doImage(protocol, new ImageResponse(url, map) {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onFinished(Bitmap content) {
+				HashMap<String, Object> map = (HashMap<String, Object>) tag;
+				T target = (T) map.get("target");
+				ITargetEventable<T, Bitmap> event = (ITargetEventable<T, Bitmap>) map.get("event");
+				if(null == event) {
+					return;
+				}
+				event.on(target, content);
+			}
+		}, parameters);
 	}
 
 	/**

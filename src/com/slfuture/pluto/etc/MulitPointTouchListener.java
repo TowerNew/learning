@@ -5,11 +5,12 @@ import android.graphics.PointF;
 import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
 @SuppressWarnings("deprecation")
-public class MulitPointTouchListener implements OnTouchListener { 
+public class MulitPointTouchListener implements OnTouchListener, OnClickListener { 
     // These matrices will be used to move and zoom image  
     Matrix matrix = new Matrix();
     Matrix savedMatrix = new Matrix();
@@ -57,7 +58,12 @@ public class MulitPointTouchListener implements OnTouchListener {
                             //Log.d(TAG, "mode=ZOOM");  
                     }  
                     break;  
-            case MotionEvent.ACTION_UP:  
+            case MotionEvent.ACTION_UP:
+            	if(null != start && start.x == event.getX() && start.y == event.getY()) {
+            		onClick(v);
+            	}
+            	mode = NONE;
+            	break;
             case MotionEvent.ACTION_POINTER_UP:  
                     mode = NONE;  
                     //Log.e("view.getWidth", view.getWidth() + "");  
@@ -124,5 +130,8 @@ public class MulitPointTouchListener implements OnTouchListener {
             float x = event.getX(0) + event.getX(1);  
             float y = event.getY(0) + event.getY(1);  
             point.set(x / 2, y / 2);  
-    }  
+    }
+
+	@Override
+	public void onClick(View v) { }  
 }
