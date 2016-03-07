@@ -353,6 +353,20 @@ public class Host {
 	}
 
 	/**
+	 * 获取mock的返回值
+	 * 
+	 * @param protocol 协议名称
+	 * @return mock的返回值
+	 */
+	public static String fetchMock(String protocol) {
+		Protocol p = protocols.get(protocol);
+		if(null == p) {
+			return null;
+		}
+		return p.mock;
+	}
+
+	/**
 	 * 执行网络命令
 	 * 
 	 * @param protocol 协议名称
