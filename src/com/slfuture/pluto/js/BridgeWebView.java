@@ -29,6 +29,10 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 	Map<String, CallBackFunction> responseCallbacks = new HashMap<String, CallBackFunction>();
 	Map<String, BridgeHandler> messageHandlers = new HashMap<String, BridgeHandler>();
 	BridgeHandler defaultHandler = new DefaultHandler();
+	/**
+	 * 本地缓存的浏览器客户端接口
+	 */
+	public WebViewClient webViewClient = null;
 
 	List<Message> startupMessage = new ArrayList<Message>();
 	long uniqueId = 0;
@@ -65,7 +69,8 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-		this.setWebViewClient(new BridgeWebViewClient());
+        webViewClient = new BridgeWebViewClient();
+		this.setWebViewClient(webViewClient);
 	}
 
 	private void handlerReturnData(String url) {
@@ -79,8 +84,7 @@ public class BridgeWebView extends WebView implements WebViewJavascriptBridge {
 		}
 	}
 
-	class BridgeWebViewClient extends WebViewClient {
-
+	public class BridgeWebViewClient extends WebViewClient {
         @Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			try {

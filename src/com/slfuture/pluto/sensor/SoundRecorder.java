@@ -130,7 +130,10 @@ public class SoundRecorder {
         if(null == recorder) {
         	return null;
         }
-        recorder.stop();
+        try {
+            recorder.stop();
+        }
+        catch(RuntimeException ex) { }
         recorder.reset();
         recorder.release();
         recorder = null;
