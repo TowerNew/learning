@@ -3,7 +3,6 @@ package com.slfuture.pluto.etc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,6 +34,9 @@ public class GraphicsHelper {
 	 * @return 打圆的图片
 	 */
 	public static Bitmap makeCycleImage(Bitmap bitmap, int width, int height) {
+		if(null == bitmap) {
+			return null;
+		}
 		float radius = 0;
 		if(width > height) {
 			radius = height;
@@ -61,6 +63,9 @@ public class GraphicsHelper {
 	 * @param stroke 位图对象
 	 */
 	public static Bitmap makeImageRing(Bitmap bitmap, int color, int strokeWidth) {
+		if(null == bitmap) {
+			return null;
+		}
 		float radius = bitmap.getWidth();
 		if(radius > bitmap.getHeight()) {
 			radius = bitmap.getHeight();
@@ -80,6 +85,9 @@ public class GraphicsHelper {
 	}
 
 	public static Bitmap makeCornerImage(Bitmap bitmap, int pixels) {
+		if(null == bitmap) {
+			return null;
+		}
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888); 
 		Canvas canvas = new Canvas(output); 
 		final int color = 0xff424242; 

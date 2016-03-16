@@ -22,6 +22,12 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 	 * 附属信息
 	 */
 	public Object tag = null;
+	/**
+	 * 图片压缩
+	 */
+	public int width = 0;
+	public int height = 0;
+
 
 	/**
 	 * 构造函数
@@ -36,11 +42,37 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 	 * 构造函数
 	 * 
 	 * @param url 图片码
+	 * @param width 宽度
+	 * @param height 高度
+	 */
+	public ImageResponse(String url, int width, int height) {
+		this.url = url;
+		this.width = width;
+		this.height = height;
+	}
+	
+	/**
+	 * 构造函数
+	 * 
+	 * @param url 图片码
 	 * @param tag 附属信息
 	 */
 	public ImageResponse(String url, Object tag) {
 		this.url = url;
 		this.tag = tag;
+	}
+
+	/**
+	 * 构造函数
+	 * 
+	 * @param url 图片码
+	 * @param tag 附属信息
+	 */
+	public ImageResponse(String url, Object tag, int width, int height) {
+		this.url = url;
+		this.tag = tag;
+		this.width = width;
+		this.height = height;
 	}
 
 	/**

@@ -20,6 +20,7 @@ import com.slfuture.pluto.communication.response.Response;
 import com.slfuture.pluto.communication.response.core.IResponse;
 import com.slfuture.pluto.config.Configuration;
 import com.slfuture.pluto.config.core.IConfig;
+import com.slfuture.pluto.etc.GraphicsHelper;
 import com.slfuture.pluto.net.HttpLoader;
 import com.slfuture.pluto.net.future.FileFuture;
 import com.slfuture.pluto.net.future.TextFuture;
@@ -157,7 +158,15 @@ public class Host {
 				this.file.renameTo(file);
 				this.file = new File(path);
 				if(fileBundle.clazz.equals(Bitmap.class)) {
-					fileBundle.content = BitmapFactory.decodeFile(this.file.getAbsolutePath());
+					if(null != fileBundle.response && fileBundle.response instanceof ImageResponse) {
+						ImageResponse response = (ImageResponse) fileBundle.response;
+						if(response.width > 0 && response.height > 0) {
+							fileBundle.content = GraphicsHelper.decodeFile(new File(this.file.getAbsolutePath()), response.width, response.height);
+						}
+					}
+					if(null == fileBundle.content) {
+						fileBundle.content = BitmapFactory.decodeFile(this.file.getAbsolutePath());
+					}
 				}
 				else {
 					fileBundle.content = this.file;
@@ -426,7 +435,12 @@ public class Host {
 		File file = new File(filePath);
 		if(file.exists()) {
 			imageResponse.setCode(Response.CODE_SUCCESS);
-			imageResponse.onFinished(BitmapFactory.decodeFile(filePath));
+			if(imageResponse.width > 0 && imageResponse.height > 0) {
+				imageResponse.onFinished(GraphicsHelper.decodeFile(new File(filePath), imageResponse.width, imageResponse.height));
+			}
+			else {
+				imageResponse.onFinished(BitmapFactory.decodeFile(filePath));
+			}
 			return;
 		}
 		HostHandler hostHandler = hostHandlers.get();
