@@ -3,6 +3,7 @@ package com.slfuture.pluto.etc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -103,6 +104,12 @@ public class GraphicsHelper {
 	 * @return 位图对象
 	 */
 	public static Bitmap decodeResource(Context context, int resourceId) {
+//		BitmapFactory.Options opt = new BitmapFactory.Options();  
+//		opt.inPreferredConfig = Bitmap.Config.RGB_565;   
+//	    opt.inPurgeable = true;
+//	    opt.inInputShareable = true;
+//	    InputStream is = context.getResources().openRawResource(resourceId);  
+//	    return BitmapFactory.decodeStream(is, null, opt); 
 		return BitmapFactory.decodeResource(context.getResources(), resourceId);
 	}
 
