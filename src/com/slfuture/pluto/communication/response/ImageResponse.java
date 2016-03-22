@@ -2,7 +2,7 @@ package com.slfuture.pluto.communication.response;
 
 import java.io.File;
 
-import com.slfuture.pluto.communication.Host;
+import com.slfuture.pluto.communication.Networking;
 
 import android.graphics.Bitmap;
 
@@ -105,7 +105,7 @@ public abstract class ImageResponse extends CommonResponse<Bitmap> {
 			return file.getName();
 		}
 		if(null != url) {
-			return Host.parseFileNameWithURL(url);
+			return Networking.parseFileNameWithURL(url);
 		}
 		return null;
 	}
