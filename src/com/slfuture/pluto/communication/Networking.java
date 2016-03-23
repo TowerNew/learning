@@ -284,13 +284,11 @@ public class Networking {
 		environments.clear();
 		currentEnvironment = null;
 		String environmentName = sharedPreferences.getString("environment", null);
-		if(null != environmentName) {
-			for(IConfig conf : Configuration.root().visits("/network/environment")) {
-				Environment environment = Environment.build(conf);
-				environments.add(environment);
-				if(environment.name.equals(environmentName)) {
-					currentEnvironment = environment;
-				}
+		for(IConfig conf : Configuration.root().visits("/network/environment")) {
+			Environment environment = Environment.build(conf);
+			environments.add(environment);
+			if(null != environmentName && environment.name.equals(environmentName)) {
+				currentEnvironment = environment;
 			}
 		}
 		if(null == currentEnvironment) {
