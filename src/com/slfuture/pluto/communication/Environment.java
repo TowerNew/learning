@@ -1,6 +1,7 @@
 package com.slfuture.pluto.communication;
 
 import com.slfuture.carrie.base.type.List;
+import com.slfuture.carrie.base.type.Table;
 import com.slfuture.pluto.config.core.IConfig;
 
 /**
@@ -15,6 +16,10 @@ public class Environment {
 	 * 主机列表
 	 */
 	public List<Host> hosts = new List<Host>();
+	/**
+	 * 参数列表
+	 */
+	public Table<String, String> parameters = new Table<String, String>();
 
 
 	/**
@@ -49,8 +54,15 @@ public class Environment {
 		Environment result = new Environment();
 		result.name = conf.getString("name");
 		if(null != conf.visits("host")) {
+			result.hosts.clear();
 			for(IConfig item : conf.visits("host")) {
 				result.hosts.add(Host.build(item));
+			}
+		}
+		if(null != conf.visits("parameter")) {
+			result.parameters.clear();
+			for(IConfig item : conf.visits("parameter")) {
+				result.parameters.put(item.getString("name"), item.getString("value"));
 			}
 		}
 		return result;

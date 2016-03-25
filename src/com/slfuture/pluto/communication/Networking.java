@@ -367,6 +367,19 @@ public class Networking {
 	}
 
 	/**
+	 * 获取当前环境下指定名称的配置
+	 * 
+	 * @param name 协议名称
+	 * @return URL
+	 */
+	public static String fetchParameter(String name) {
+		if(null == currentEnvironment) {
+			return null;
+		}
+		return currentEnvironment.parameters.get(name);
+	}
+
+	/**
 	 * 获取协议URL
 	 * 
 	 * @param protocol 协议名称
